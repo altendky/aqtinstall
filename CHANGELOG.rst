@@ -20,6 +20,11 @@ Changed
 Fixed
 -----
 
+- Switch back to multiprocessing.dummy
+  * concurrency.futures used in v0.7.2, 0.7.3 become troublesome.
+  * switch back to multiprocessing.dummy which used in v0.7.1.
+
+
 Deprecated
 ----------
 
