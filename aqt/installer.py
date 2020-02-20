@@ -32,6 +32,8 @@ import requests
 import py7zr
 from aqt.helper import altlink
 
+NUM_THREAD = 3
+
 
 class BadPackageFile(Exception):
     pass
@@ -114,14 +116,14 @@ class QtInstaller:
         else:
             extractor = self.extract_archive_ext
         archives = self.qt_archives.get_archives()
-        p = multiprocessing.dummy.Pool(3)
+        p = multiprocessing.dummy.Pool(NUM_THREAD)
         ret_arr = p.map(self.retrieve_archive, archives)
         ret = functools.reduce(and_, ret_arr)
         if ret:
             self.logger.info("Downloads are Completed.")
         else:
             self.logger.error("Failed to download.")
-        p = multiprocessing.dummy.Pool()
+        p = multiprocessing.dummy.Pool(NUM_THREAD)
         ret_arr = p.map(extractor, archives)
         ret = functools.reduce(and_, ret_arr)
         if ret:
