@@ -76,21 +76,27 @@ class QtInstaller:
             except Exception as e:
                 self.logger.warning("Caught download error: %s" % e.args)
                 return False
+        self.logger.info("Download {} finished.".format(url))
         return True
 
     def extract_archive(self, package):
         try:
             archive = package.archive
-            py7zr.SevenZipFile(archive).extractall(path=self.base_dir)
+            self.logger.info("Extracting {}...".format(archive))
+            szip = py7zr.SevenZipFile(archive)
+            szip.extractall(path=self.base_dir)
+            szip.close()
             os.unlink(archive)
         except Exception:
             return False
         else:
+            self.logger.info("Extracted {}".format(archive))
             return True
 
     def extract_archive_ext(self, package):
         try:
             archive = package.archive
+            self.logger.info("Extracting {}...".format(archive))
             if self.base_dir is not None:
                 subprocess.run([self.command, 'x', '-aoa', '-bd', '-y', '-o{}'.format(self.base_dir), archive])
             else:
