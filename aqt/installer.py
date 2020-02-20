@@ -91,9 +91,8 @@ class QtInstaller:
             self.logger.warning("Extraction error in {}".format(archive))
             return False
 
-    def extract_archive(self, package):
+    def extract_archive(self, archive):
         try:
-            archive = package.archive
             szip = py7zr.SevenZipFile(archive)
             szip.extractall(path=self.base_dir)
             szip.close()
@@ -103,13 +102,16 @@ class QtInstaller:
         else:
             return True
 
-    def extract_archive_ext(self, package):
+    def extract_archive_ext(self, archive):
         try:
-            archive = package.archive
             if self.base_dir is not None:
-                subprocess.run([self.command, 'x', '-aoa', '-bd', '-y', '-o{}'.format(self.base_dir), archive])
+                with subprocess.Popen([self.command, 'x', '-aoa', '-bd', '-y', '-o{}'.format(self.base_dir), archive],
+                                      stdout=subprocess.PIPE) as proc:
+                    self.logger.debug(proc.stdout.read())
             else:
-                subprocess.run([self.command, 'x', '-aoa', '-bd', '-y', archive])
+                with subprocess.Popen([self.command, 'x', '-aoa', '-bd', '-y', archive],
+                                      stdout=subprocess.PIPE) as proc:
+                    self.logger.debug(proc.stdout.read())
             os.unlink(archive)
         except Exception:
             return False
