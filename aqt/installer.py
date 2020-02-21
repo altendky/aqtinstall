@@ -85,7 +85,7 @@ class QtInstaller:
         self.logger.info("Extracting {}...".format(archive))
         ret = self.extractor(archive)
         if ret:
-            self.logger.info("Extraction of {} done.".format(archive))
+            self.logger.info("Done installation of {}.".format(archive))
             return True
         else:
             self.logger.warning("Extraction error in {}".format(archive))
